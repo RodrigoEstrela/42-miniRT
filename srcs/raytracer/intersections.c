@@ -25,7 +25,6 @@ float	intersect_ray_sphere(t_ray ray, t_sphere sphere)
 		return (t);
 	return (0);
 }
-
 float intersect_ray_plane(t_ray ray, t_plane plane)
 {
 	float t;
@@ -69,7 +68,6 @@ float	intersect_ray_triangle(t_ray ray, t_triangle triangle) //Möller Trumbore 
 	}
 	return (0);
 }
-
 t_hit_obj 	get_closest_intersection(t_data *data, t_ray ray)
 {
 	int			i;

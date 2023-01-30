@@ -39,25 +39,39 @@ int blend_colors(int color1, int color2, float ratio)
 {
 	if (ratio > 1)
 		ratio = 1;
+	if (ratio < 0)
+		ratio = 0;
 	int r = (int)((float)((color1 >> 16) & 0xFF) * ratio + (float)((color2 >> 16) & 0xFF) * (1 - ratio));
 	int g = (int)((float)((color1 >> 8) & 0xFF) * ratio + (float)((color2 >> 8) & 0xFF) * (1 - ratio));
 	int b = (int)((float)((color1) & 0xFF) * ratio + (float)((color2) & 0xFF) * (1 - ratio));
 	return (r << 16 | g << 8 | b);
 }
 
+float	fresnel(t_vector incident_dir, t_vector normal, float material_light_absortion)
+{
+	float	r0 = pow((1.0f - MATERIAL_REFRACTION) / (1.0f + MATERIAL_REFRACTION), 2);
+	float	cos_theta = -dot_product(normal, incident_dir);
+	float 	x = 1.0f - cos_theta;
+	float 	ret = r0 + (1.0f - r0) * pow(x, 5);
+	ret = material_light_absortion + (1.0f - material_light_absortion) * ret;
+	return (ret);
+}
+
 int reflection_refraction(t_data *data, t_ray ray, t_hit_obj hit, int depth, float light_intensity)
 {
 	t_ray		reflected_ray;
 	t_hit_obj 	reflected_hit;
+	float		fresnel_ratio;
 
 	reflected_ray.direction = calc_reflected_ray(ray.direction, hit.normal);
-//	vector_rand(&reflected_ray.direction, 0.56f);
+//	vector_rand(&reflected_ray, 0.1f);
 	normalize_vector(&reflected_ray.direction);
+	fresnel_ratio = fresnel(ray.direction, hit.normal, hit.light_absorb_ratio);
 	reflected_ray.origin = hit.hit_point;
 	reflected_hit = get_reflected_color(data, reflected_ray, hit);
-	reflected_hit.color = blend_colors(hit.color, reflected_hit.color, hit.light_absorb_ratio / light_intensity);
-//	reflected_hit.light_absorb_ratio = hit.light_absorb_ratio;
-	light_intensity *= (1.0f - hit.light_absorb_ratio);
+	reflected_hit.color = blend_colors(hit.color, reflected_hit.color, fresnel_ratio/*hit.light_absorb_ratio *//*+ (1 - light_intensity)*/);
+	reflected_hit.color = blend_colors(reflected_hit.color, hit.color, light_intensity);
+	light_intensity = light_intensity - hit.light_absorb_ratio;
 	if (depth > 1 && light_intensity > 0.01f)
 		return (reflection_refraction(data, reflected_ray, reflected_hit, depth - 1, light_intensity));
 	return (reflected_hit.color);

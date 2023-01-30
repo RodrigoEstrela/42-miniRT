@@ -1,6 +1,8 @@
 #include "../../inc/minirt.h"
 
-t_vector rotate_vector(t_vector v, float angles[3])
+#include "../../inc/minirt.h"
+
+t_vector rotate_vector(t_vector v, float angles[3], t_vector center)
 {
 	t_vector rotated;
 	// Rotate around X axis
@@ -13,15 +15,21 @@ t_vector rotate_vector(t_vector v, float angles[3])
 	rotated.x = x;
 	rotated.z = z;
 	// Rotate around Z axis
-	rotated.x = rotated.x * cos(angles[2]) - rotated.y * sin(angles[2]);
-	rotated.y = rotated.x * sin(angles[2]) + rotated.y * cos(angles[2]);
+	x = rotated.x * cos(angles[2]) - rotated.y * sin(angles[2]);
+	float y = rotated.x * sin(angles[2]) + rotated.y * cos(angles[2]);
+	rotated.x = x;
+	rotated.y = y;
 	return rotated;
 }
 
 float intersection_hyperboloid(t_hiperb h, t_ray ray)
 {
-	t_vector ro = rotate_vector(ray.origin, h.rotation_angles);
-	t_vector rd = rotate_vector(ray.direction, h.rotation_angles);
+	t_vector ro = vector_add(rotate_vector(ray.origin, h.rotation_angles, h.center),
+							 rotate_vector(h.center, (float[3]){h.rotation_angles[0],
+																  h.rotation_angles[1],
+																  h.rotation_angles[2] * -1}, h.center));
+//	t_vector ro = rotate_vector(ray.origin, h.rotation_angles);
+	t_vector rd = rotate_vector(ray.direction, h.rotation_angles, h.center);
 	t_vector o = ro;
 	t_vector d = rd;
 	float a = h.parameters[0], b = h.parameters[1], c = h.parameters[2];
@@ -44,10 +52,12 @@ float intersection_hyperboloid(t_hiperb h, t_ray ray)
 
 t_vector normal_hyperboloid(t_hiperb h, t_vector point)
 {
-	float a = h.parameters[0], b = h.parameters[1], c = h.parameters[2];
 	t_vector normal;
-	normal.x = 2 * point.x / (a * a);
-	normal.y = 2 * point.y / (b * b);
-	normal.z = 2 * point.z / (c * c);
+	normal.x = 2 * point.x / (h.parameters[0] * h.parameters[0]);
+	normal.y = 2 * point.y / (h.parameters[1] * h.parameters[1]);
+	normal.z = -2 * point.z / (h.parameters[2] * h.parameters[2]);
+	normal = rotate_vector(normal, h.rotation_angles, h.center);
+	normalize_vector(&normal);
 	return normal;
 }
+

@@ -45,7 +45,7 @@ void	ray_tracer(t_data *data)
 	y = 0;
 	while (x < (int)WIND_W)
 	{
-//		render_progress_bar(x);
+		render_progress_bar(x);
 		while (y < (int)WIND_H)
 		{
 			ray = get_ray(data, x, y);
@@ -57,7 +57,10 @@ void	ray_tracer(t_data *data)
 //				color = hit.color;
 			}
 			else
+			{
+//				color = background_color(y, 0x282828, 0xc13800);
 				color = background_color(y, BACKGROUND1, BACKGROUND2);
+			}
 			put_pxl(&data->img, x, y, color);
 			y++;
 		}

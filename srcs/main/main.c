@@ -21,16 +21,16 @@ long int	current_time_millis()
 		*//*data->light->origin.x += 1;
 		data->light->origin.y = sin(data->light->origin.x / 70);*//*
 	}
-}*/
+}
 
 int render(t_data *data)
 {
-//	light_animation(data);
+	light_animation(data);
 	ray_tracer(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	fps(data);
 	return (0);
-}
+}*/
 
 void	init_graphics(t_data *data)
 {
@@ -44,7 +44,7 @@ void	loop(t_data *data)
 	init_graphics(data);
 	controls(data);
 	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
-//	mlx_loop_hook(data->mlx, render, data);
+	//mlx_loop_hook(data->mlx, render, data);
 	mlx_loop(data->mlx);
 }
 

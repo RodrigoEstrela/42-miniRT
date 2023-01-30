@@ -10,7 +10,7 @@ SRCS		=	main/main.c main/initializers.c \
 
 OBJS		=	$(addprefix objs/,$(SRCS:.c=.o))
 
-CFLAGS		= 	-g -ffast-math
+CFLAGS		= 	-g #-ffast-math
 
 RM		=	rm -f
 

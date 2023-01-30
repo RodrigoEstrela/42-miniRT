@@ -23,12 +23,13 @@
 # define 	BACKGROUND2	0x03CFFC
 # define	FOV			70
 # define	LUMENS		10000
-# define	AMBIENT_LIGHT	0.3f
-# define	REFLECTION_DEPTH	5
-# define 	WORLD_SIZE	2000
+# define	AMBIENT_LIGHT	0.15f
+# define	REFLECTION_DEPTH	25
+# define	MATERIAL_REFRACTION	1.2f
+/*# define 	WORLD_SIZE	2000
 # define 	CAM_X		1000 //(WORLD_SIZE / 2)
 # define 	CAM_Y		(-50)
-# define 	CAM_Z		1000 //(WORLD_SIZE / 2)
+# define 	CAM_Z		1000 //(WORLD_SIZE / 2)*/
 
 typedef struct s_img
 {
@@ -136,8 +137,8 @@ typedef struct s_scene
 	t_cylinder	*cylinders;
 	t_triangle	*triangles;
 	t_light		*lights;
-	t_hiperb	*hyperboloids;
 	t_camera	*cameras;
+	t_hiperb	*hyperboloids;
 }				t_scene;
 
 typedef struct s_nb_objs {
@@ -162,7 +163,7 @@ typedef struct s_near_obj {
 	int			closest_cylinder;
 	int			cylinder_face;
 	int			closest_triangle;
-	int			closest_hyperboloid;
+	int 		closest_hyperboloid;
 	t_vector	normal;
 	t_vector	hit_point;
 	int 		color;
@@ -220,7 +221,6 @@ void		parser(char *file, t_scene *scene);
 int			plane_counter(char *file);
 int			sphere_counter(char *file);
 int			triangle_counter(char *file);
-int			hiperboloid_counter(char *file);
 
 //VECTOR UTILS
 void		vector_rand(t_vector *reflect_dir, float randomness);
@@ -250,7 +250,8 @@ char		*ft_itoa(int n);
 char 		**ft_split(char const *s, char c);
 char		**tab_space_split(char const *s);
 
-//HYPERBOLOID
+//HYPERBOLOIDS
+int			hiperboloid_counter(char *file);
 float		intersection_hyperboloid(t_hiperb hyperboloid, t_ray ray);
 t_vector	normal_hyperboloid(t_hiperb h, t_vector point);
 

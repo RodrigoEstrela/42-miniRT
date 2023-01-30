@@ -105,7 +105,7 @@ int    camera_counter(char *file)
 	fd = open(file, O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
-		if (line[0] == 'c' && line[1] == ' ')
+		if (line[0] == 'c')
 			count++;
 		free(line);
 	}
@@ -128,7 +128,7 @@ int    light_counter(char *file)
 	fd = open(file, O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
-		if (line[0] == 'l' && line[1] == ' ')
+		if (line[0] == 'l')
 			count++;
 		free(line);
 	}
@@ -238,7 +238,7 @@ void   parser(char *file, t_scene *scene)
 			}
 			else
 			{
-				scene->planes[j].light_absorb_ratio = 1;
+				scene->planes[j].light_absorb_ratio = 0.3f;
 				sub_params = ft_split(params[3], ',');
 			}
 			scene->planes[j].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
@@ -301,10 +301,11 @@ void   parser(char *file, t_scene *scene)
 			}
 			else
 			{
-				scene->triangles[l].light_absorb_ratio = 1;
+				scene->triangles[l].light_absorb_ratio = 0.3f;
 				sub_params = ft_split(params[3], ',');
 			}
 			scene->triangles[l].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
+//			scene->triangles[l].color = 0x920092;
 			free_double_array(sub_params);
 			l++;
 		}
