@@ -323,6 +323,7 @@ void   parser(char *file, t_scene *scene)
 			normalize_vector(&scene->cameras[m].normal);
 			free_double_array(sub_params);
 			scene->cameras[m].view_matrix = set_camera_to_world_transformation_matrix(scene->cameras[m], (t_vector){0, 1, 0});
+			scene->cameras[m].id = m;
 			m++;
 		}
 		else if (params[0][0] == 'l')

@@ -181,14 +181,45 @@ t_hit_obj 	get_closest_intersection(t_data *data, t_ray ray)
 		t = intersection_hyperboloid(data->scene->hyperboloids[i], ray);
 		if (t)
 		{
-			if (t < hit.t_min)
+			t_vector ro = rotate_vector(ray.origin, data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
+			t_vector rd = rotate_vector(ray.direction, data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
+			t_vector o = vector_sub(ro, data->scene->hyperboloids[i].center);
+			t_vector d = rd;
+			t_vector point = vector_add(o, vector_scale(d, t));
+			if (point.z > -data->scene->hyperboloids[i].height/2 && point.z < data->scene->hyperboloids[i].height/2)
 			{
-				hit.t_min = t;
-				hit.closest_hyperboloid = i;
-				hit.closest_sphere = -1;
-				hit.closest_plane = -1;
-				hit.closest_cylinder = -1;
-				hit.closest_triangle = -1;
+				if (t < hit.t_min)
+				{
+					hit.t_min = t;
+					hit.closest_hyperboloid = i;
+					hit.closest_sphere = -1;
+					hit.closest_plane = -1;
+					hit.closest_cylinder = -1;
+					hit.closest_triangle = -1;
+				}
+			}
+			else
+			{
+				float	t2 = t;
+				t = intersection_hyperboloid(data->scene->hyperboloids[i], (t_ray){vector_add(ray.origin, vector_scale(ray.direction, t + 0.01f)) , ray.direction});
+				if (t)
+				{
+					ro = rotate_vector(vector_add(ray.origin, vector_scale(ray.direction, t2 + 0.01f)), data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
+					o = vector_sub(ro, data->scene->hyperboloids[i].center);
+					point = vector_add(o, vector_scale(d, t));
+					if (point.z > -data->scene->hyperboloids[i].height/2 && point.z < data->scene->hyperboloids[i].height/2)
+					{
+						if (t + t2 < hit.t_min)
+						{
+							hit.t_min = t + t2;
+							hit.closest_hyperboloid = i;
+							hit.closest_sphere = -1;
+							hit.closest_plane = -1;
+							hit.closest_cylinder = -1;
+							hit.closest_triangle = -1;
+						}
+					}
+				}
 			}
 		}
 	}

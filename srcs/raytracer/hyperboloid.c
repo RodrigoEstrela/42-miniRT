@@ -39,23 +39,20 @@ float intersection_hyperboloid(t_hiperb h, t_ray ray)
 	if (t1 < 0 && t2 < 0)
 		return 0;
 	float t = (t1 < 0 || t2 < t1) ? t2 : t1;
-	t_vector point = vector_add(o, vector_scale(d, t));
-//	 Check if the point is inside the height limit of the hyperboloid
-	if (point.z < -h.height/2 || point.z > h.height/2)
-		return 0;
 	return t;
 }
 
 t_vector normal_hyperboloid(t_hiperb h, t_vector point)
 {
 	t_vector normal;
-	normal.x = 2 * point.x / (h.parameters[0] * h.parameters[0]);
-	normal.y = 2 * point.y / (h.parameters[1] * h.parameters[1]);
-	normal.z = -2 * point.z / (h.parameters[2] * h.parameters[2]);
-	normal = rotate_vector(normal, (float[4]){h.rotation_angles[0],
-											  h.rotation_angles[1],
-											  h.rotation_angles[2],
-											  1.57}, h.center);
+	t_vector rotated_point = rotate_vector(point, h.rotation_angles, h.center);
+	t_vector offset = vector_sub(rotated_point, h.center);
+
+	normal.x = 2 * offset.x / (h.parameters[0] * h.parameters[0]);
+	normal.y = 2 * offset.y / (h.parameters[1] * h.parameters[1]);
+	normal.z = -2 * offset.z / (h.parameters[2] * h.parameters[2]);
+
+	normal = rotate_vector(normal, h.rotation_angles, h.center);
 	normalize_vector(&normal);
 	return normal;
 }

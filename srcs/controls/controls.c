@@ -2,7 +2,7 @@
 
 int	key_press(int key, t_data *data)
 {
-	//printf("key: %d\n", key);
+//	printf("key: %d\n", key);
 	if (key == 65307)
 		exit(0);
 	/*else if (key == 119)
