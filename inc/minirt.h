@@ -14,8 +14,12 @@
 # include "mlx.h"
 # include "get_next_line.h"
 
-# define	WIND_W		840.00f/*1920.00f*/
-# define	WIND_H		680.00f/*1080.00f*/
+/*# define	WIND_W		400.00f
+# define	WIND_H		300.00f*/
+# define	WIND_W		840.00f
+# define	WIND_H		680.00f
+/*# define	WIND_W		1920.00f
+# define	WIND_H		1080.00f*/
 # define	GREEN		0x00FF00
 # define	BLUE		0x0000FF
 # define	RED			0xFF0000
@@ -25,7 +29,8 @@
 # define	LUMENS		10000
 # define	AMBIENT_LIGHT	0.15f
 # define	REFLECTION_DEPTH	25
-# define	MATERIAL_REFRACTION	1.2f
+# define	MATERIAL_REFRACTION	1.1f
+# define	MATERIAL_TRANSPARENCY	0.0f
 /*# define 	WORLD_SIZE	2000
 # define 	CAM_X		1000 //(WORLD_SIZE / 2)
 # define 	CAM_Y		(-50)
@@ -103,17 +108,6 @@ typedef struct s_triangle
 	float 		light_absorb_ratio;
 }				t_triangle;
 
-typedef struct s_hiperboloid
-{
-	t_vector	center;
-	float		parameters[3];
-	int			type;
-	float 		rotation_angles[3];
-	float 		height;
-	float		light_absorb_ratio;
-	int			color;
-}				t_hiperb;
-
 typedef struct s_light
 {
 	t_vector	origin;
@@ -138,7 +132,6 @@ typedef struct s_scene
 	t_triangle	*triangles;
 	t_light		*lights;
 	t_camera	*cameras;
-	t_hiperb	*hyperboloids;
 }				t_scene;
 
 typedef struct s_nb_objs {
@@ -149,7 +142,6 @@ typedef struct s_nb_objs {
 	int			nb_triangles;
 	int			nb_lights;
 	int			nb_cameras;
-	int 		nb_hyperboloids;
 }				t_nb_objs;
 
 typedef struct	s_animation {
@@ -163,7 +155,6 @@ typedef struct s_near_obj {
 	int			closest_cylinder;
 	int			cylinder_face;
 	int			closest_triangle;
-	int 		closest_hyperboloid;
 	t_vector	normal;
 	t_vector	hit_point;
 	int 		color;
@@ -201,7 +192,7 @@ t_vector 	normal_cylinder(t_cylinder cylinder, t_vector hit_point);
 t_vector	normal_triangle(t_triangle triangle);
 void		put_pxl(t_img *img, int x, int y, int color);
 void		ray_tracer(t_data *data);
-int			reflection_refraction(t_data *data, t_ray ray, t_hit_obj hit, int depth, float intensity);
+int 		reflection_refraction(t_data *data, t_ray ray, t_hit_obj hit, int depth, float intensity);
 int			shading(t_hit_obj hit, t_ray ray, t_data *data);
 int 		shading_plane(t_plane plane, t_ray ray, t_vector hit_point, t_data *data);
 int			shading_sphere(t_sphere sphere, t_ray, t_vector hit_point, t_data *data);
@@ -232,6 +223,7 @@ t_vector	vector_from_points(t_vector point1, t_vector point2);
 float		vector_length(t_vector v);
 t_vector	vector_scale(t_vector v, float scale);
 t_vector	vector_sub(t_vector v1, t_vector v2);
+void		vector_rand(t_vector *reflect_dir, float randomness);
 
 //TIME
 long int	current_time_millis();
@@ -244,15 +236,19 @@ float		**set_camera_to_world_transformation_matrix(t_camera camera, t_vector up)
 void		render_progress_bar(int x);
 
 //UTILS
+int			blend_colors(int color1, int color2, float ratio);
 int			ft_atoi(const char *str);
 float		ft_atof(char *str);
 char		*ft_itoa(int n);
 char 		**ft_split(char const *s, char c);
 char		**tab_space_split(char const *s);
 
-//HYPERBOLOIDS
-int			hiperboloid_counter(char *file);
-float		intersection_hyperboloid(t_hiperb hyperboloid, t_ray ray);
-t_vector	normal_hyperboloid(t_hiperb h, t_vector point);
+//ANIMATION
+
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int	checkcode(char *line, t_data *data);
+void	clean_slate(t_data *g);
+void	init_graphics(t_data *data);
+void transform(t_data *data, char code[3], int n, float value);
 
 #endif

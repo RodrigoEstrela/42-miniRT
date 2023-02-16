@@ -38,14 +38,37 @@ void	init_graphics(t_data *data)
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 }
 
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t i;
+
+	i = 0;
+	while (i < n && s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	if (i == n)
+		return (0);
+	return (s1[i] - s2[i]);
+}
+
 void	loop(t_data *data)
 {
 	ray_tracer(data);
 	init_graphics(data);
 	controls(data);
-	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
-	//mlx_loop_hook(data->mlx, render, data);
+//	int i = 5;
+//	while (i--)
+//	{
+//		controls(data);
+//		char *line = get_next_line(0);
+//		checkcode(line, data);
+//	}
 	mlx_loop(data->mlx);
+//	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
+	//mlx_loop_hook(data->mlx, render, data);
 }
 
 int main(int argc, char **argv)
@@ -62,6 +85,6 @@ int main(int argc, char **argv)
 	init_data(data, argv[1]);
 	printf("Parsing scene...\n");
 	parser(argv[1], data->scene);
-	printf("Rendering...\n");
+//	printf("Rendering...\n");
 	loop(data);
 }

@@ -137,25 +137,6 @@ int    light_counter(char *file)
 	return (count);
 }
 
-int hiperboloid_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-
-	count = 0;
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 'h' && line[1] == 'y')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
 int    rgb_to_int(int r, int g, int b)
 {
 	return (r << 16 | g << 8 | b);
@@ -171,6 +152,19 @@ void   free_double_array(char **array)
 	free(array);
 }
 
+void	print_double_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		printf("array[%d] = %s|\n", i, array[i]);
+		i++;
+	}
+	printf("\n");
+}
+
 void   parser(char *file, t_scene *scene)
 {
 	int       fd;
@@ -180,7 +174,6 @@ void   parser(char *file, t_scene *scene)
 	int    l;
 	int    m;
 	int    n;
-	int		o;
 	char   *line;
 	char   **params;
 	char   **sub_params;
@@ -191,7 +184,6 @@ void   parser(char *file, t_scene *scene)
 	l = 0;
 	m = 0;
 	n = 0;
-	o = 0;
 	fd = open(file, O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
@@ -323,7 +315,6 @@ void   parser(char *file, t_scene *scene)
 			normalize_vector(&scene->cameras[m].normal);
 			free_double_array(sub_params);
 			scene->cameras[m].view_matrix = set_camera_to_world_transformation_matrix(scene->cameras[m], (t_vector){0, 1, 0});
-			scene->cameras[m].id = m;
 			m++;
 		}
 		else if (params[0][0] == 'l')
@@ -338,39 +329,6 @@ void   parser(char *file, t_scene *scene)
 			scene->lights[n].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
 			free_double_array(sub_params);
 			n++;
-		}
-		else if (params[0][0] == 'h' && params[0][1] == 'y')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->hyperboloids[o].center.x = ft_atof(sub_params[0]);
-			scene->hyperboloids[o].center.y = ft_atof(sub_params[1]);
-			scene->hyperboloids[o].center.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[2], ',');
-			scene->hyperboloids[o].parameters[0] = ft_atof(sub_params[0]);
-			scene->hyperboloids[o].parameters[1] = ft_atof(sub_params[1]);
-			scene->hyperboloids[o].parameters[2] = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			scene->hyperboloids[o].type = ft_atoi(params[3]);
-			sub_params = ft_split(params[4], ',');
-			scene->hyperboloids[o].rotation_angles[0] = ft_atof(sub_params[0]);
-			scene->hyperboloids[o].rotation_angles[1] = ft_atof(sub_params[1]);
-			scene->hyperboloids[o].rotation_angles[2] = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			scene->hyperboloids[o].height = ft_atof(params[5]);
-			if (params[7])
-			{
-				scene->hyperboloids[o].light_absorb_ratio = ft_atof(params[6]);
-				sub_params = ft_split(params[7], ',');
-			}
-			else
-			{
-				scene->hyperboloids[o].light_absorb_ratio = 1;
-				sub_params = ft_split(params[6], ',');
-			}
-			scene->hyperboloids[o].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-			free_double_array(sub_params);
-			o++;
 		}
 		free_double_array(params);
 		free(line);

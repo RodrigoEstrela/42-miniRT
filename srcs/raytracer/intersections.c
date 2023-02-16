@@ -68,7 +68,7 @@ float	intersect_ray_triangle(t_ray ray, t_triangle triangle) //Möller Trumbore 
 	}
 	return (0);
 }
-t_hit_obj 	get_closest_intersection(t_data *data, t_ray ray)
+t_hit_obj 	 get_closest_intersection(t_data *data, t_ray ray)
 {
 	int			i;
 	float		t;
@@ -174,55 +174,6 @@ t_hit_obj 	get_closest_intersection(t_data *data, t_ray ray)
 			}
 		}
 	}
-	i = -1;
-	//CHECK HYPERBOLOIDS
-	while(++i < data->nb_objs->nb_hyperboloids)
-	{
-		t = intersection_hyperboloid(data->scene->hyperboloids[i], ray);
-		if (t)
-		{
-			t_vector ro = rotate_vector(ray.origin, data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
-			t_vector rd = rotate_vector(ray.direction, data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
-			t_vector o = vector_sub(ro, data->scene->hyperboloids[i].center);
-			t_vector d = rd;
-			t_vector point = vector_add(o, vector_scale(d, t));
-			if (point.z > -data->scene->hyperboloids[i].height/2 && point.z < data->scene->hyperboloids[i].height/2)
-			{
-				if (t < hit.t_min)
-				{
-					hit.t_min = t;
-					hit.closest_hyperboloid = i;
-					hit.closest_sphere = -1;
-					hit.closest_plane = -1;
-					hit.closest_cylinder = -1;
-					hit.closest_triangle = -1;
-				}
-			}
-			else
-			{
-				float	t2 = t;
-				t = intersection_hyperboloid(data->scene->hyperboloids[i], (t_ray){vector_add(ray.origin, vector_scale(ray.direction, t + 0.01f)) , ray.direction});
-				if (t)
-				{
-					ro = rotate_vector(vector_add(ray.origin, vector_scale(ray.direction, t2 + 0.01f)), data->scene->hyperboloids[i].rotation_angles, data->scene->hyperboloids[i].center);
-					o = vector_sub(ro, data->scene->hyperboloids[i].center);
-					point = vector_add(o, vector_scale(d, t));
-					if (point.z > -data->scene->hyperboloids[i].height/2 && point.z < data->scene->hyperboloids[i].height/2)
-					{
-						if (t + t2 < hit.t_min)
-						{
-							hit.t_min = t + t2;
-							hit.closest_hyperboloid = i;
-							hit.closest_sphere = -1;
-							hit.closest_plane = -1;
-							hit.closest_cylinder = -1;
-							hit.closest_triangle = -1;
-						}
-					}
-				}
-			}
-		}
-	}
 	if (hit.t_min < 4535320)
 	{
 		hit.hit_point = vector_add(ray.origin, vector_scale(ray.direction, hit.t_min));
@@ -255,12 +206,6 @@ t_hit_obj 	get_closest_intersection(t_data *data, t_ray ray)
 			hit.normal = normal_triangle(data->scene->triangles[hit.closest_triangle]);
 			hit.color = data->scene->triangles[hit.closest_triangle].color;
 			hit.light_absorb_ratio = data->scene->triangles[hit.closest_triangle].light_absorb_ratio;
-		}
-		else if (hit.closest_hyperboloid != -1)
-		{
-			hit.normal = normal_hyperboloid(data->scene->hyperboloids[hit.closest_hyperboloid], hit.hit_point);
-			hit.color = data->scene->hyperboloids[hit.closest_hyperboloid].color;
-			hit.light_absorb_ratio = data->scene->hyperboloids[hit.closest_hyperboloid].light_absorb_ratio;
 		}
 	}
 	return (hit);

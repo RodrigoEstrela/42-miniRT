@@ -51,7 +51,6 @@ void	init_data(t_data *data, char *scene_file)
 	data->nb_objs->nb_triangles = triangle_counter(scene_file);
 	data->nb_objs->nb_cameras = camera_counter(scene_file);
 	data->nb_objs->nb_lights = light_counter(scene_file);
-	data->nb_objs->nb_hyperboloids = hiperboloid_counter(scene_file);
 	data->scene = (t_scene *)malloc(sizeof(t_scene));
 	data->scene->spheres = (t_sphere *)malloc(sizeof(t_sphere) * data->nb_objs->nb_spheres);
 	data->scene->planes = (t_plane *)malloc(sizeof(t_plane) * data->nb_objs->nb_planes);
@@ -59,7 +58,6 @@ void	init_data(t_data *data, char *scene_file)
 	data->scene->triangles = (t_triangle *)malloc(sizeof(t_triangle) * data->nb_objs->nb_triangles);
 	data->scene->cameras = (t_camera *)malloc(sizeof(t_camera) * data->nb_objs->nb_cameras);
 	data->scene->lights = (t_light *)malloc(sizeof(t_light) * data->nb_objs->nb_lights);
-	data->scene->hyperboloids = (t_hiperb *)malloc(sizeof(t_hiperb) * data->nb_objs->nb_hyperboloids);
 	/*data->light = malloc(sizeof(t_light));
 	data->light->origin.x = 0;
 	data->light->origin.y = 30;
