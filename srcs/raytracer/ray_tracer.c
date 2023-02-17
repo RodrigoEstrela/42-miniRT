@@ -27,8 +27,8 @@ t_ray	get_ray(t_data *data, int x, int y)
 	camera.y = (1 - 2 * (y + 0.5) / WIND_H) * tan(deg_to_rad(FOV) / 2);
 	camera.z = 1;
 	normalize_vector(&camera);
-	ray.origin = data->scene->cameras[0].origin;
-	ray.direction = transform_vector(camera, data->scene->cameras[0].view_matrix);
+	ray.origin = data->scene->cameras[data->camera_index].origin;
+	ray.direction = transform_vector(camera, data->scene->cameras[data->camera_index].view_matrix);
 	normalize_vector(&ray.direction);
 	return (ray);
 }

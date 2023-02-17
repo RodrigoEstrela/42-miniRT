@@ -105,7 +105,7 @@ int    camera_counter(char *file)
 	fd = open(file, O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
-		if (line[0] == 'c')
+		if (line[0] == 'c' && (line[1] == ' ' || line[1] == '\t'))
 			count++;
 		free(line);
 	}

@@ -68,4 +68,5 @@ void	init_data(t_data *data, char *scene_file)
 	data->fps.frame_ctr = 0;
 	data->fps.fps = 0;
 	data->start_render_time = current_time_millis();
+	data->camera_index = 0;
 }

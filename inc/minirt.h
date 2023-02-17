@@ -175,6 +175,7 @@ typedef struct s_data
 	t_fps		fps;
 	t_animation	animation;
 	long int	start_render_time;
+	int			camera_index;
 }				t_data;
 
 typedef struct s_thread_data
