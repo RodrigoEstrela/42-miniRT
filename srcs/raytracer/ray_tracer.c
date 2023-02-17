@@ -77,6 +77,21 @@ void thread_master(t_data *data)
 {
 	int i = -1;
 	pthread_t thread_data[16];
+
+	/*float j = -1;
+	float k = -1;
+	while (++j < 4)
+	{
+		while (++k < 4 && ++i < 16)
+			pthread_create(&thread_data[i], 0, ray_tracer,
+						   (t_thread_data [5]){data,
+											   WIND_W - WIND_W * 0.25f * (k + 1.0),
+											   WIND_H - WIND_H * 0.25f * (j + 1.0),
+											   WIND_W * 0.25f * (k + 1.0),
+											   WIND_H * 0.25f * (j + 1.0)});
+		k = -1;
+	}
+	i = -1;*/
 	// LINHA DE CIMA
 	pthread_create(&thread_data[0], 0, ray_tracer,
 				   (t_thread_data [5]){data, 0, 0, WIND_W * 0.25f, WIND_H * 0.25f});
