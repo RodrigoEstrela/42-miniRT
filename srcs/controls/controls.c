@@ -16,7 +16,6 @@ int	key_press(int key, t_data *data)
 		obj_code = ft_split(cmd, ' ');
 		code[0] = ft_itoa(checkcode(obj_code[0], data))[0];
 		n = ft_atoi(obj_code[1]);
-		printf("code: %c, n: %d\n", code[0], n);
 	}
 	else if (key == 65293)
 	{
@@ -26,91 +25,104 @@ int	key_press(int key, t_data *data)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '1', '1'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 102 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '1', '2'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 65361 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '1'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 65363 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '2'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 65362 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '3'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 65364 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '4'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 32 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '5'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 99 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '2', '6'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 120 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '3', '1'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 121 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '3', '2'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 122 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '3', '3'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 101 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '4', '1'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	else if (key == 114 && n > -1)
 	{
 		clean_slate(data);
 		transform(data, (char [3]){code[0], '4', '2'}, n, 0.5f);
-		ray_tracer(data);
+//		ray_tracer(data);
+		thread_master(data);
 		mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	}
 	return (0);

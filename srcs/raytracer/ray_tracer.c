@@ -33,40 +33,86 @@ t_ray	get_ray(t_data *data, int x, int y)
 	return (ray);
 }
 
-void	ray_tracer(t_data *data)
+void	*ray_tracer(void *tdata)
 {
 	t_ray ray;
 	int x;
 	int y;
+	int x_max;
+	int y_max;
 	int color;
 	t_hit_obj	hit;
 
-	x = 0;
-	y = 0;
-	while (x < (int)WIND_W)
+	x = ((t_thread_data *)tdata)->x;
+	y = ((t_thread_data *)tdata)->y;
+	x_max = ((t_thread_data *)tdata)->x_max;
+	y_max = ((t_thread_data *)tdata)->y_max;
+	while (x < x_max)
 	{
 //		render_progress_bar(x);
-		while (y < (int)WIND_H)
+		while (y < y_max)
 		{
-			ray = get_ray(data, x, y);
-			hit = get_closest_intersection(data, ray);
+			ray = get_ray(((t_thread_data *)tdata)->data, x, y);
+			hit = get_closest_intersection(((t_thread_data *)tdata)->data, ray);
 			if (hit.t_min < 4535320)
 			{
-				hit.color = reflection_refraction(data, ray, hit, REFLECTION_DEPTH, 1.0f);
-				color = shading(hit, ray, data);
+				hit.color = reflection_refraction(((t_thread_data *)tdata)->data, ray, hit, REFLECTION_DEPTH, 1.0f);
+				color = shading(hit, ray, ((t_thread_data *)tdata)->data);
 				color = blend_colors(color, hit.color, hit.light_absorb_ratio);
 //				color = hit.color;
 			}
 			else
-			{
-//				color = background_color(y, 0x282828, 0xc13800);
 				color = background_color(y, BACKGROUND1, BACKGROUND2);
-			}
-			put_pxl(&data->img, x, y, color);
+			put_pxl(&(((t_thread_data *)tdata)->data)->img, x, y, color);
 			y++;
 		}
 		y = 0;
 		x++;
 	}
+	return (0);
 //	printf("\rProgress: 100%% | \n");
+}
+
+void thread_master(t_data *data)
+{
+	int i = -1;
+	pthread_t thread_data[16];
+	// LINHA DE CIMA
+	pthread_create(&thread_data[0], 0, ray_tracer,
+				   (t_thread_data [5]){data, 0, 0, WIND_W * 0.25f, WIND_H * 0.25f});
+	pthread_create(&thread_data[1], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.25f, 0, WIND_W * 0.5f, WIND_H * 0.25f});
+	pthread_create(&thread_data[2], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.5f, 0, WIND_W * 0.75f, WIND_H * 0.25f});
+	pthread_create(&thread_data[3], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.75f, 0, WIND_W, WIND_H * 0.25f});
+	// SEGUNDA LINHA
+	pthread_create(&thread_data[4], 0, ray_tracer,
+				   (t_thread_data [5]){data, 0, WIND_H * 0.25f, WIND_W * 0.25f, WIND_H * 0.5f});
+	pthread_create(&thread_data[5], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.25f, WIND_H * 0.25f, WIND_W * 0.5f, WIND_H * 0.5f});
+	pthread_create(&thread_data[6], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.5f, WIND_H * 0.25f, WIND_W * 0.75f, WIND_H * 0.5f});
+	pthread_create(&thread_data[7], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.75f, WIND_H * 0.25f, WIND_W, WIND_H * 0.5f});
+	// TERCEIRA LINHA
+	pthread_create(&thread_data[8], 0, ray_tracer,
+				   (t_thread_data [5]){data, 0, WIND_H * 0.5f, WIND_W * 0.25f, WIND_H * 0.75f});
+	pthread_create(&thread_data[9], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.25f, WIND_H * 0.5f, WIND_W * 0.5f, WIND_H * 0.75f});
+	pthread_create(&thread_data[10], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.5f, WIND_H * 0.5f, WIND_W * 0.75f, WIND_H * 0.75f});
+	pthread_create(&thread_data[11], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.75f, WIND_H * 0.5f, WIND_W, WIND_H * 0.75f});
+	// LINHA DE BAIXO
+	pthread_create(&thread_data[12], 0, ray_tracer,
+				   (t_thread_data [5]){data, 0, WIND_H * 0.75f, WIND_W * 0.25f, WIND_H});
+	pthread_create(&thread_data[13], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.25f, WIND_H * 0.75f, WIND_W * 0.5f, WIND_H});
+	pthread_create(&thread_data[14], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.5f, WIND_H * 0.75f, WIND_W * 0.75f, WIND_H});
+	pthread_create(&thread_data[15], 0, ray_tracer,
+				   (t_thread_data [5]){data, WIND_W * 0.75f, WIND_H * 0.75f, WIND_W, WIND_H});
+	while (++i < 16)
+		pthread_join(thread_data[i], 0);
 }

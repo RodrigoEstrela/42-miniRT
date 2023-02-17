@@ -56,16 +56,9 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 void	loop(t_data *data)
 {
-	ray_tracer(data);
+	thread_master(data);
 	init_graphics(data);
 	controls(data);
-//	int i = 5;
-//	while (i--)
-//	{
-//		controls(data);
-//		char *line = get_next_line(0);
-//		checkcode(line, data);
-//	}
 	mlx_loop(data->mlx);
 //	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
 	//mlx_loop_hook(data->mlx, render, data);

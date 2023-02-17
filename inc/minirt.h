@@ -11,6 +11,8 @@
 # include <time.h>
 # include <sys/time.h>
 # include <stdint.h>
+# include <pthread.h>
+# include <string.h>
 # include "mlx.h"
 # include "get_next_line.h"
 
@@ -175,6 +177,15 @@ typedef struct s_data
 	long int	start_render_time;
 }				t_data;
 
+typedef struct s_thread_data
+{
+	t_data		*data;
+	int			x;
+	int			y;
+	int			x_max;
+	int			y_max;
+}				t_thread_data;
+
 //GRAPHICS
 int			background_color(int y, int color1, int color2);
 int			calc_color_intensity(int color, float intensity);
@@ -191,7 +202,7 @@ float		light_intens_by_dist(t_light light, t_vector hit_point);
 t_vector 	normal_cylinder(t_cylinder cylinder, t_vector hit_point);
 t_vector	normal_triangle(t_triangle triangle);
 void		put_pxl(t_img *img, int x, int y, int color);
-void		ray_tracer(t_data *data);
+void		*ray_tracer(void *data);
 int 		reflection_refraction(t_data *data, t_ray ray, t_hit_obj hit, int depth, float intensity);
 int			shading(t_hit_obj hit, t_ray ray, t_data *data);
 int 		shading_plane(t_plane plane, t_ray ray, t_vector hit_point, t_data *data);
@@ -250,5 +261,9 @@ int	checkcode(char *line, t_data *data);
 void	clean_slate(t_data *g);
 void	init_graphics(t_data *data);
 void transform(t_data *data, char code[3], int n, float value);
+
+// THREADS
+
+void thread_master(t_data *data);
 
 #endif
