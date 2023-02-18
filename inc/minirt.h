@@ -255,6 +255,10 @@ char		*ft_itoa(int n);
 char 		**ft_split(char const *s, char c);
 char		**tab_space_split(char const *s);
 
+
+
+
+
 //ANIMATION
 
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -266,5 +270,30 @@ void transform(t_data *data, char code[3], int n, float value);
 // THREADS
 
 void thread_master(t_data *data);
+
+// KEYS
+
+enum e_keys{
+	key_ESC = 65307,
+	key_TAB = 65289,
+	key_ENTER = 65293,
+	key_D = 100,
+	key_F = 102,
+	key_LEFT = 65361,
+	key_RIGHT = 65363,
+	key_UP = 65362,
+	key_DOWN = 65364,
+	key_SPACE = 32,
+	key_C = 99,
+	key_X = 120,
+	key_Y = 121,
+	key_Z = 122,
+	key_H = 104,
+	key_J = 106,
+	key_K = 107,
+	key_E = 101,
+	key_R = 114,
+	key_V = 118,
+};
 
 #endif

@@ -314,6 +314,7 @@ void   parser(char *file, t_scene *scene)
 			scene->cameras[m].normal.z = ft_atof(sub_params[2]);
 			normalize_vector(&scene->cameras[m].normal);
 			free_double_array(sub_params);
+			scene->cameras[m].fov = (float)ft_atoi(params[3]);
 			scene->cameras[m].view_matrix = set_camera_to_world_transformation_matrix(scene->cameras[m], (t_vector){0, 1, 0});
 			m++;
 		}

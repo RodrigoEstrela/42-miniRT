@@ -59,8 +59,8 @@ void	loop(t_data *data)
 	thread_master(data);
 	init_graphics(data);
 	controls(data);
-	mlx_loop(data->mlx);
 //	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
+	mlx_loop(data->mlx);
 	//mlx_loop_hook(data->mlx, render, data);
 }
 
