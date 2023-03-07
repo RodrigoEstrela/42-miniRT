@@ -12,31 +12,32 @@
 
 #include "../../inc/minirt.h"
 
-float	ft_atof(char *str)
+void	key_rotation(t_data *data, int key, char *code, int n)
 {
-	float	result;
-	float	decimal;
-	float	sign;
-	int		i;
-
-	result = 0;
-	decimal = 0;
-	sign = 1;
-	i = 0;
-	if (ft_strncmp(str, "0", 2) == 0)
-		return (0.00001f);
-	if (str[i] == '-')
+	if (data->edit_mode == 1 && code[0] != '0')
 	{
-		sign = -1;
-		i++;
+		if (key == key_X)
+			transform(data, (char [3]){code[0], '3', '1'}, n, 0.5f);
+		else if (key == key_Y)
+			transform(data, (char [3]){code[0], '3', '2'}, n, 0.5f);
+		else if (key == key_Z)
+			transform(data, (char [3]){code[0], '3', '3'}, n, 0.5f);
+		else if (key == key_H)
+			transform(data, (char [3]){code[0], '3', '4'}, n, 0.5f);
+		else if (key == key_J)
+			transform(data, (char [3]){code[0], '3', '5'}, n, 0.5f);
+		else if (key == key_K)
+			transform(data, (char [3]){code[0], '3', '6'}, n, 0.5f);
 	}
-	while (str[i] && str[i] != '.' && str[i] != '\n')
-		result = result * 10 + (float)str[i++] - '0';
-	if (str[i] == '.')
-		i++;
-	while (str[i] && str[i] != '\n')
-		decimal = decimal * 10 + (float)str[i++] - '0';
-	while (i && str[--i] != '.')
-		decimal /= 10;
-	return ((result + decimal) * sign);
+}
+
+void	key_height(t_data *data, int key, char *code, int n)
+{
+	if (data->edit_mode == 1 && code[0] != '0')
+	{
+		if (key == key_E)
+			transform(data, (char [3]){code[0], '4', '1'}, n, 0.5f);
+		else if (key == key_R)
+			transform(data, (char [3]){code[0], '4', '2'}, n, 0.5f);
+	}
 }

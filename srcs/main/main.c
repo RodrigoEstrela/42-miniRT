@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MINIRT                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdas-nev <rdas-nev@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 4242/42/42 42:42:42 by rdas-nev          #+#    #+#             */
+/*   Updated: 4242/42/42 42:42:42 by rdas-nev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minirt.h"
 
-long int	current_time_millis()
+long int	current_time_millis(void)
 {
 	struct timeval	tv;
 
@@ -8,76 +20,41 @@ long int	current_time_millis()
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-/*void	light_animation(t_data *data)
-{
-	long int	current_time;
-
-	current_time = current_time_millis();
-	if (data->animation.time < current_time)
-	{
-		ray_tracer(data);
-		data->animation.time = current_time + 10;
-		data->scene->cameras[0].normal.x += 0.1;
-		*//*data->light->origin.x += 1;
-		data->light->origin.y = sin(data->light->origin.x / 70);*//*
-	}
-}
-
-int render(t_data *data)
-{
-	light_animation(data);
-	ray_tracer(data);
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
-	fps(data);
-	return (0);
-}*/
-
-void	init_graphics(t_data *data)
-{
-	data->mlx_win = mlx_new_window(data->mlx, WIND_W, WIND_H, "MiniRT");
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t i;
-
-	i = 0;
-	while (i < n && s1[i] && s2[i])
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
-		i++;
-	}
-	if (i == n)
-		return (0);
-	return (s1[i] - s2[i]);
-}
-
 void	loop(t_data *data)
 {
-	thread_master(data);
-	init_graphics(data);
+	multi_threading(data);
+	data->mlx_win = mlx_new_window(data->mlx, WIND_W, WIND_H, "miniRT");
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img.img, 0, 0);
 	controls(data);
-//	printf("Render time: %ld ms\n", current_time_millis() - data->start_render_time);
+	printf("Render time: %ld ms\n",
+		current_time_millis() - data->start_render_time);
 	mlx_loop(data->mlx);
-	//mlx_loop_hook(data->mlx, render, data);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_data		*data;
-	t_ray		ray;
+	t_data	*data;
 
 	if (argc != 2)
-	{
-		printf("Correct usage: ./minirt scenes/(scene.rt)\n");
-		return (0);
-	}
+		return (printf("\033[31mError\nCorrect: ./miniRT scenes/(file.rt)\n"));
+	if (open(argv[1], O_RDONLY) == -1)
+		return (printf("\033[31mError\nFile not found\n"));
+	if (open(argv[1], __O_DIRECTORY) != -1)
+		return (printf("\033[31mError\nIncorrect file type\n"));
+	if (ft_strncmp(".rt", argv[1] + ft_strlen(argv[1]) - 3, 3))
+		return (printf("\033[31mError\nFile extension must be .rt\n"));
+	if (camera_counter(argv[1]) == 0)
+		return (printf("\033[31mError\nNo cameras found in scene\n"));
 	data = (t_data *)malloc(sizeof(t_data));
 	init_data(data, argv[1]);
 	printf("Parsing scene...\n");
-	parser(argv[1], data->scene);
-//	printf("Rendering...\n");
+	parser(argv[1], data);
+	if (ambience_counter(argv[1]) != 1)
+	{
+		reach_eof(data->fd, data);
+		free_all(data, printf("\033[31mError\n"
+				"Ambience must be defined once and only once.\033[0m\n"));
+	}
+	printf("Rendering...\n");
 	loop(data);
 }

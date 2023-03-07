@@ -12,31 +12,17 @@
 
 #include "../../inc/minirt.h"
 
-float	ft_atof(char *str)
+int	ft_strncmp(char *s1, char *s2, int n)
 {
-	float	result;
-	float	decimal;
-	float	sign;
-	int		i;
+	int	i;
 
-	result = 0;
-	decimal = 0;
-	sign = 1;
 	i = 0;
-	if (ft_strncmp(str, "0", 2) == 0)
-		return (0.00001f);
-	if (str[i] == '-')
-	{
-		sign = -1;
+	if (n == 0)
+		return (0);
+	if (!s1 || !s2)
+		return (0);
+	while (i + 1 < n && ((unsigned char)s1[i] == (unsigned char)s2[i]
+			&& ((unsigned char)s1[i]) && ((unsigned char)s2[i])))
 		i++;
-	}
-	while (str[i] && str[i] != '.' && str[i] != '\n')
-		result = result * 10 + (float)str[i++] - '0';
-	if (str[i] == '.')
-		i++;
-	while (str[i] && str[i] != '\n')
-		decimal = decimal * 10 + (float)str[i++] - '0';
-	while (i && str[--i] != '.')
-		decimal /= 10;
-	return ((result + decimal) * sign);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

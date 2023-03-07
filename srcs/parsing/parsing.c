@@ -1,339 +1,89 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MINIRT                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdas-nev <rdas-nev@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 4242/42/42 42:42:42 by rdas-nev          #+#    #+#             */
+/*   Updated: 4242/42/42 42:42:42 by rdas-nev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minirt.h"
 
-int    sphere_counter(char *file)
+typedef struct s_parser_vars
 {
-	int    fd;
-	int    count;
-	char   *line;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 's' && line[1] == 'p')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int plane_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-// char   *path;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 'p' && line[1] == 'l')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int cylinder_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-// char   *path;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 'c' && line[1] == 'y')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int    triangle_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-// char   *path;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 't' && line[1] == 'r')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int    camera_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-// char   *path;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 'c' && (line[1] == ' ' || line[1] == '\t'))
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int    light_counter(char *file)
-{
-	int    fd;
-	int    count;
-	char   *line;
-// char   *path;
-
-	count = 0;
-	/*path = ft_strjoin("./scenes/", file);
-	fd = open(path, O_RDONLY);
-	free(path);*/
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		if (line[0] == 'l')
-			count++;
-		free(line);
-	}
-	free(line);
-	close(fd);
-	return (count);
-}
-
-int    rgb_to_int(int r, int g, int b)
-{
-	return (r << 16 | g << 8 | b);
-}
-
-void   free_double_array(char **array)
-{
-	int    i;
-
-	i = -1;
-	while (array[++i])
-		free(array[i]);
-	free(array);
-}
-
-void	print_double_array(char **array)
-{
+	int	fd;
 	int	i;
+	int	j;
+	int	k;
+	int	l;
+	int	m;
+	int	n;
+	int	line_count;
+}		t_parser_vars;
 
-	i = 0;
-	while (array[i])
-	{
-		printf("array[%d] = %s|\n", i, array[i]);
-		i++;
-	}
-	printf("\n");
+t_parser_vars	init_parser_vars(char *file)
+{
+	t_parser_vars	vars;
+
+	vars.fd = open(file, O_RDONLY);
+	if (vars.fd < 0)
+		printf("\033[31mError\nFile not found\033[0m\n");
+	vars.i = 0;
+	vars.j = 0;
+	vars.k = 0;
+	vars.l = 0;
+	vars.m = 0;
+	vars.n = 0;
+	vars.line_count = 1;
+	return (vars);
 }
 
-void   parser(char *file, t_scene *scene)
+void	validate_obj(char *param, t_data *data, int lcount, char *line)
 {
-	int       fd;
-	int       i;
-	int    j;
-	int    k;
-	int    l;
-	int    m;
-	int    n;
-	char   *line;
-	char   **params;
-	char   **sub_params;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	l = 0;
-	m = 0;
-	n = 0;
-	fd = open(file, O_RDONLY);
-	while ((line = get_next_line(fd)))
+	if (line[0] == ' ' || line[0] == '\t')
 	{
-//    params = ft_split(line, ' ');
-		params = tab_space_split(line);
-		if (params[0][0] == 's' && params[0][1] == 'p')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->spheres[i].center.x = ft_atof(sub_params[0]);
-			scene->spheres[i].center.y = ft_atof(sub_params[1]);
-			scene->spheres[i].center.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			scene->spheres[i].diameter = ft_atof(params[2]);
-			if (params[4])
-			{
-				scene->spheres[i].light_absorb_ratio = ft_atof(params[3]);
-				sub_params = ft_split(params[4], ',');
-			}
-			else
-			{
-				scene->spheres[i].light_absorb_ratio = 1;
-				sub_params = ft_split(params[3], ',');
-			}
-			scene->spheres[i].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-			free_double_array(sub_params);
-			i++;
-		}
-		else if (params[0][0] == 'p' && params[0][1] == 'l')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->planes[j].point.x = ft_atof(sub_params[0]);
-			scene->planes[j].point.y = ft_atof(sub_params[1]);
-			scene->planes[j].point.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[2], ',');
-			scene->planes[j].normal.x = ft_atof(sub_params[0]);
-			scene->planes[j].normal.y = ft_atof(sub_params[1]);
-			scene->planes[j].normal.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			if (params[4])
-			{
-				scene->planes[j].light_absorb_ratio = ft_atof(params[3]);
-				sub_params = ft_split(params[4], ',');
-			}
-			else
-			{
-				scene->planes[j].light_absorb_ratio = 0.3f;
-				sub_params = ft_split(params[3], ',');
-			}
-			scene->planes[j].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-			free_double_array(sub_params);
-			j++;
-		}
-		else if (params[0][0] == 'c' && params[0][1] == 'y')
-		{
-			t_vector v1;
-
-			sub_params = ft_split(params[1], ',');
-			scene->cylinders[k].base_center.x = ft_atof(sub_params[0]);
-			scene->cylinders[k].base_center.y = ft_atof(sub_params[1]);
-			scene->cylinders[k].base_center.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[2], ',');
-			v1.x = ft_atof(sub_params[0]);
-			v1.y = ft_atof(sub_params[1]);
-			v1.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			normalize_vector(&v1);
-			scene->cylinders[k].normal = v1;
-			scene->cylinders[k].diameter = ft_atof(params[3]);
-			scene->cylinders[k].height = ft_atof(params[4]);
-			if (params[6])
-			{
-				scene->cylinders[k].light_absorb_ratio = ft_atof(params[5]);
-				sub_params = ft_split(params[6], ',');
-			}
-			else
-			{
-				scene->cylinders[k].light_absorb_ratio = 1;
-				sub_params = ft_split(params[5], ',');
-			}
-			scene->cylinders[k].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-			free_double_array(sub_params);
-			k++;
-		}
-		else if (params[0][0] == 't' && params[0][1] == 'r')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->triangles[l].p1.x = ft_atof(sub_params[0]);
-			scene->triangles[l].p1.y = ft_atof(sub_params[1]);
-			scene->triangles[l].p1.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[2], ',');
-			scene->triangles[l].p2.x = ft_atof(sub_params[0]);
-			scene->triangles[l].p2.y = ft_atof(sub_params[1]);
-			scene->triangles[l].p2.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[3], ',');
-			scene->triangles[l].p3.x = ft_atof(sub_params[0]);
-			scene->triangles[l].p3.y = ft_atof(sub_params[1]);
-			scene->triangles[l].p3.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			if (params[4])
-			{
-				scene->triangles[l].light_absorb_ratio = ft_atof(params[3]);
-				sub_params = ft_split(params[4], ',');
-			}
-			else
-			{
-				scene->triangles[l].light_absorb_ratio = 0.3f;
-				sub_params = ft_split(params[3], ',');
-			}
-			scene->triangles[l].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-//			scene->triangles[l].color = 0x920092;
-			free_double_array(sub_params);
-			l++;
-		}
-		else if (params[0][0] == 'c')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->cameras[m].origin.x = ft_atof(sub_params[0]);
-			scene->cameras[m].origin.y = ft_atof(sub_params[1]);
-			scene->cameras[m].origin.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			sub_params = ft_split(params[2], ',');
-			scene->cameras[m].normal.x = ft_atof(sub_params[0]);
-			scene->cameras[m].normal.y = ft_atof(sub_params[1]);
-			scene->cameras[m].normal.z = ft_atof(sub_params[2]);
-			normalize_vector(&scene->cameras[m].normal);
-			free_double_array(sub_params);
-			scene->cameras[m].fov = (float)ft_atoi(params[3]);
-			scene->cameras[m].view_matrix = set_camera_to_world_transformation_matrix(scene->cameras[m], (t_vector){0, 1, 0});
-			m++;
-		}
-		else if (params[0][0] == 'l')
-		{
-			sub_params = ft_split(params[1], ',');
-			scene->lights[n].origin.x = ft_atof(sub_params[0]);
-			scene->lights[n].origin.y = ft_atof(sub_params[1]);
-			scene->lights[n].origin.z = ft_atof(sub_params[2]);
-			free_double_array(sub_params);
-			scene->lights[n].intensity = ft_atof(params[2]);
-			sub_params = ft_split(params[3], ',');
-			scene->lights[n].color = rgb_to_int(ft_atoi(sub_params[0]), ft_atoi(sub_params[1]), ft_atoi(sub_params[2]));
-			free_double_array(sub_params);
-			n++;
-		}
-		free_double_array(params);
-		free(line);
+		free_all(data, printf("\033[31mError\nInvalid "
+				"object at line %d\033[0m\n", lcount));
 	}
-	free(line);
-	close(fd);
+	if (ft_strncmp(param, "C", 2) && ft_strncmp(param, "A", 2)
+		&& ft_strncmp(param, "L", 2) && ft_strncmp(param, "sp", 3)
+		&& ft_strncmp(param, "pl", 3) && ft_strncmp(param, "cy", 3)
+		&& ft_strncmp(param, "tr", 3) && ft_strncmp(param, "\n", 2)
+		&& ft_strncmp(param, "#", 1))
+	{
+		free_all(data, printf("\033[31mError\nInvalid "
+				"object at line %d\033[0m\n", lcount));
+	}
+}
+
+void	parser(char *file, t_data *data)
+{
+	t_parser_vars	vars;
+
+	vars = init_parser_vars(file);
+	data->line = get_next_line(vars.fd);
+	data->fd = vars.fd;
+	while (data->line)
+	{
+		data->params = tab_space_split(data->line);
+		validate_obj(data->params[0], data, vars.line_count, data->line);
+		vars.i += sphere_parser(data->params, data, vars.i, vars.line_count);
+		vars.j += plane_parser(data->params, data, vars.j, vars.line_count);
+		vars.k += cylinder_parser(data->params, data, vars.k, vars.line_count);
+		vars.l += triangle_parser(data->params, data, vars.l, vars.line_count);
+		vars.m += camera_parser(data->params, data, vars.m, vars.line_count);
+		vars.n += light_parser(data->params, data, vars.n, vars.line_count);
+		ambience_parser(data->params, data);
+		free_double_array(data->params);
+		data->params = NULL;
+		free(data->line);
+		vars.line_count++;
+		data->line = get_next_line(vars.fd);
+	}
+	if (data->scene->amb_light[0].intensity == -1)
+		free_all(data, printf("\033[31mError\nNo ambience light\033[0m\n"));
+	free(data->line);
 }

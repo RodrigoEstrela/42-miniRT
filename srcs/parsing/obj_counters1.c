@@ -12,31 +12,65 @@
 
 #include "../../inc/minirt.h"
 
-float	ft_atof(char *str)
+int	sphere_counter(char *file)
 {
-	float	result;
-	float	decimal;
-	float	sign;
-	int		i;
+	int		fd;
+	int		count;
+	char	*line;
 
-	result = 0;
-	decimal = 0;
-	sign = 1;
-	i = 0;
-	if (ft_strncmp(str, "0", 2) == 0)
-		return (0.00001f);
-	if (str[i] == '-')
+	count = 0;
+	fd = open(file, O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
 	{
-		sign = -1;
-		i++;
+		if (line[0] == 's' && line[1] == 'p')
+			count++;
+		free(line);
+		line = get_next_line(fd);
 	}
-	while (str[i] && str[i] != '.' && str[i] != '\n')
-		result = result * 10 + (float)str[i++] - '0';
-	if (str[i] == '.')
-		i++;
-	while (str[i] && str[i] != '\n')
-		decimal = decimal * 10 + (float)str[i++] - '0';
-	while (i && str[--i] != '.')
-		decimal /= 10;
-	return ((result + decimal) * sign);
+	free(line);
+	close(fd);
+	return (count);
+}
+
+int	plane_counter(char *file)
+{
+	int		fd;
+	int		count;
+	char	*line;
+
+	count = 0;
+	fd = open(file, O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
+	{
+		if (line[0] == 'p' && line[1] == 'l')
+			count++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
+	return (count);
+}
+
+int	cylinder_counter(char *file)
+{
+	int		fd;
+	int		count;
+	char	*line;
+
+	count = 0;
+	fd = open(file, O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
+	{
+		if (line[0] == 'c' && line[1] == 'y')
+			count++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
+	return (count);
 }
