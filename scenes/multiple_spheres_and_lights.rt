@@ -1,0 +1,72 @@
+
+R  800   600
+A  0.25   255,255,255
+L  0,4,0   0.2   255,255,255
+L  6,4,-6   0.2   255,255,255
+L  12,4,-12   0.2   255,255,255
+
+C  6,4,4   0,-0.7,-1   80
+C  -1,2,2   0.6,-0.4,-0.55   66
+C  0,1,1   0,-0.25,-0.75   66
+
+# Plane			Point		Normal		Texture Color		Material Reference
+
+pl				0,-0.5,0	0,1,0		140,118,206			pl_plstc
+
+#	Sphere Center			Diameter		Texture Color		Material Reference
+
+sp	0,0,0					1				216,56,136			std_mtl
+sp	0,0,-2					1				0,176,240			std_mtl
+sp	0,0,-4					1				68,194,164			std_mtl
+sp	0,0,-6					1				255,204,0			std_mtl
+sp	0,0,-8					1				216,56,136			std_mtl
+sp	0,0,-10					1				0,176,240			std_mtl
+sp	0,0,-12					1				68,194,164			std_mtl
+
+sp	2,0,-2					1				216,56,136			std_mtl
+sp	2,0,-4					1				0,176,240			std_mtl
+sp	2,0,-6					1				68,194,164			std_mtl
+sp	2,0,-8					1				255,204,0			std_mtl
+sp	2,0,-10					1				216,56,136			std_mtl
+sp	2,0,-12					1				0,176,240			std_mtl
+sp	2,0,0					1				68,194,164			std_mtl
+
+sp	4,0,-4					1				216,56,136			std_mtl
+sp	4,0,-6					1				0,176,240			std_mtl
+sp	4,0,-8					1				68,194,164			std_mtl
+sp	4,0,-10					1				255,204,0			std_mtl
+sp	4,0,-12					1				216,56,136			std_mtl
+sp	4,0,0					1				0,176,240			std_mtl
+sp	4,0,-2					1				68,194,164			std_mtl
+
+sp	6,0,-6					1				216,56,136			std_mtl
+sp	6,0,-8					1				0,176,240			std_mtl
+sp	6,0,-10					1				68,194,164			std_mtl
+sp	6,0,-12					1				255,204,0			std_mtl
+sp	6,0,0					1				216,56,136			std_mtl
+sp	6,0,-2					1				0,176,240			std_mtl
+sp	6,0,-4					1				68,194,164			std_mtl
+
+sp	8,0,-8					1				216,56,136			std_mtl
+sp	8,0,-10					1				0,176,240			std_mtl
+sp	8,0,-12					1				68,194,164			std_mtl
+sp	8,0,0					1				255,204,0			std_mtl
+sp	8,0,-2					1				216,56,136			std_mtl
+sp	8,0,-4					1				0,176,240			std_mtl
+sp	8,0,-6					1				68,194,164			std_mtl
+
+sp	10,0,-10				1				216,56,136			std_mtl
+sp	10,0,-12				1				0,176,240			std_mtl
+sp	10,0,0					1				68,194,164			std_mtl
+sp	10,0,-2					1				255,204,0			std_mtl
+sp	10,0,-4					1				216,56,136			std_mtl
+sp	10,0,-6					1				0,176,240			std_mtl
+sp	10,0,-8					1				68,194,164			std_mtl
+
+sp	12,0,-12				1				216,56,136			std_mtl
+sp	12,0,0					1				0,176,240			std_mtl
+sp	12,0,-2					1				68,194,164			std_mtl
+sp	12,0,-4					1				255,204,0			std_mtl
+sp	12,0,-6					1				216,56,136			std_mtl
+sp	12,0,-8					1				0,176,240			std_mtl
+sp	12,0,-10				1				68,194,164			std_mtl
